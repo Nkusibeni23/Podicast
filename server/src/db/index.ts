@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import { MONGO_URL } from "#/utils/variables";
 
-const URL = process.env.MONGO_URL as string;
+// const URL = process.env.MONGO_URL as string;
 
 mongoose
-  .connect(URL)
+  .connect(MONGO_URL)
   .then(() => {
     console.log("db is connected");
   })
