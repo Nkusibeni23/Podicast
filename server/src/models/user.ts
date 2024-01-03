@@ -1,4 +1,3 @@
-import { compare } from "bcrypt";
 // interface (typescript)
 
 import { compare, hash } from "bcrypt";
