@@ -3,6 +3,8 @@ import { RequestHandler } from "express";
 import User from "#/models/user";
 import nodemailer from "nodemailer";
 import { MAILTRAP_PASS, MAILTRAP_USER } from "#/utils/variables";
+import { generateToken } from "#/utils/helper";
+import EmailVerificationToken from "#/models/emailVerificationToken";
 
 export const create: RequestHandler = async (req: CreateUser, res) => {
   const { email, password, name } = req.body;
@@ -29,11 +31,17 @@ export const create: RequestHandler = async (req: CreateUser, res) => {
     },
   });
 
+  const token = generateToken();
+  await EmailVerificationToken.create({
+    owner: user._id,
+    token,
+  });
+
   try {
     transport.sendMail({
       to: user.email,
       from: "auth@gmail.com",
-      html: "<h1>Hello World!!</h1>",
+      html: `<h1>Your Verification token is ${token}</h1>`,
     });
     console.log("Email sent successfully!");
   } catch (error) {
