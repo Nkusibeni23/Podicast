@@ -3,7 +3,8 @@ import * as yup from "yup";
 
 export const validate = (schema: any): RequestHandler => {
   return async (req, res, next) => {
-    if (!req.body) return res.json({ error: "Empty body is not excepted!" });
+    if (!req.body)
+      return res.status(422).json({ error: "Empty body is not excepted!" });
     const schemaToValidate = yup.object({
       body: schema,
     });
@@ -19,7 +20,7 @@ export const validate = (schema: any): RequestHandler => {
       next();
     } catch (error) {
       if (error instanceof yup.ValidationError) {
-        return res.status(400).json({ error: error.message });
+        return res.status(422).json({ error: error.message });
       }
     }
   };
