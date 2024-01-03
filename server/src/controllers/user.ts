@@ -1,10 +1,12 @@
 import { CreateUser } from "#/@types/user";
 import { RequestHandler } from "express";
+import path from "path";
 import User from "#/models/user";
 import nodemailer from "nodemailer";
 import { MAILTRAP_PASS, MAILTRAP_USER } from "#/utils/variables";
 import { generateToken } from "#/utils/helper";
 import EmailVerificationToken from "#/models/emailVerificationToken";
+import { generateTemplate } from "#/mail/template";
 
 export const create: RequestHandler = async (req: CreateUser, res) => {
   const { email, password, name } = req.body;
@@ -37,11 +39,33 @@ export const create: RequestHandler = async (req: CreateUser, res) => {
     token,
   });
 
+  const welcomeMessage = `Hi ${name}, Welcome to Podify! There are so much thing that we do for verified users. Use the given OTP to verify your email.`;
+
   try {
     transport.sendMail({
       to: user.email,
       from: "auth@gmail.com",
-      html: `<h1>Your Verification token is ${token}</h1>`,
+      subject: `Please verify your account`,
+      html: generateTemplate({
+        title: "Welcome to Podify",
+        message: welcomeMessage,
+        logo: "cid:logo",
+        banner: "cid:Welcome",
+        link: "#",
+        btnTitle: token,
+      }),
+      attachments: [
+        {
+          filename: "logo.png",
+          path: path.join(__dirname, "../mail/logo.png"),
+          cid: "logo",
+        },
+        {
+          filename: "welcome.png",
+          path: path.join(__dirname, "../mail/welcome.png"),
+          cid: "welcome",
+        },
+      ],
     });
     console.log("Email sent successfully!");
   } catch (error) {
