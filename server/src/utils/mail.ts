@@ -68,3 +68,49 @@ export const sendVerificationMail = async (token: string, profile: Profile) => {
     console.error("Error sending email:", error);
   }
 };
+
+interface Options {
+  email: string;
+  link: string;
+}
+
+export const sendForgetPasswordLink = async (options: Options) => {
+  const transport = generateMailTransporter();
+  const { email, link } = options;
+
+  //   const token = generateToken();
+
+  const message =
+    " We just received a request that you forgot your password.No problem you can use the link below and create brand new password.";
+
+  try {
+    transport.sendMail({
+      to: email,
+      from: "myapp@gmail.com",
+      subject: "Reset Password Link",
+      html: generateTemplate({
+        title: "Forget Password",
+        message,
+        logo: "cid:logo",
+        banner: "cid:forget_password",
+        link: link,
+        btnTitle: "Reset Password",
+      }),
+      attachments: [
+        {
+          filename: "logo.png",
+          path: path.join(__dirname, "../mail/logo.png"),
+          cid: "logo",
+        },
+        {
+          filename: "password_reset.png",
+          path: path.join(__dirname, "../mail/password_reset.png"),
+          cid: "forget_password",
+        },
+      ],
+    });
+    console.log("Email sent successfully!");
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};
