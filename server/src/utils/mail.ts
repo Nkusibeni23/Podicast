@@ -93,8 +93,50 @@ export const sendForgetPasswordLink = async (options: Options) => {
         message,
         logo: "cid:logo",
         banner: "cid:forget_password",
-        link: link,
+        link,
         btnTitle: "Reset Password",
+      }),
+      attachments: [
+        {
+          filename: "logo.png",
+          path: path.join(__dirname, "../mail/logo.png"),
+          cid: "logo",
+        },
+        {
+          filename: "password_reset.png",
+          path: path.join(__dirname, "../mail/password_reset.png"),
+          cid: "forget_password",
+        },
+      ],
+    });
+    console.log("Email sent successfully!");
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};
+
+export const sendSuccessfulUpdateEmail = async (
+  name: string,
+  email: string
+) => {
+  const transport = generateMailTransporter();
+
+  //   const token = generateToken();
+
+  const message = `Dear ${name} we just updated your new password. you can now sign in with your new password.`;
+
+  try {
+    transport.sendMail({
+      to: email,
+      from: "myapp@gmail.com",
+      subject: "Password Reset Successfully",
+      html: generateTemplate({
+        title: "Password Reset Successfully",
+        message,
+        logo: "cid:logo",
+        banner: "cid:forget_password",
+        link: "https://yourapp.com/sign-in",
+        btnTitle: "Log in",
       }),
       attachments: [
         {

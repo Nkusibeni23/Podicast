@@ -2,7 +2,11 @@ import { CreateUser, VerifyEmailRequest } from "#/@types/user";
 import { RequestHandler } from "express";
 import User from "#/models/user";
 import { generateToken } from "#/utils/helper";
-import { sendForgetPasswordLink, sendVerificationMail } from "#/utils/mail";
+import {
+  sendForgetPasswordLink,
+  sendSuccessfulUpdateEmail,
+  sendVerificationMail,
+} from "#/utils/mail";
 import EmailVerificationToken from "#/models/emailVerificationToken";
 import { isValidObjectId } from "mongoose";
 import PasswordResetToken from "#/models/passwordResetToken";
@@ -110,4 +114,25 @@ export const grantValid: RequestHandler = async (req, res) => {
   res.json({
     valid: true,
   });
+};
+
+export const updatePassword: RequestHandler = async (req, res) => {
+  const { password, userId } = req.body;
+
+  const user = await User.findById(userId);
+  if (!user) return res.status(403).json({ error: "Unauthorized access!" });
+
+  const matched = await user.comparePassword(password);
+  if (matched)
+    return res
+      .status(422)
+      .json({ error: "The New password must be different!" });
+
+  user.password = password;
+  await user.save();
+
+  await PasswordResetToken.findOneAndDelete({ owner: user._id });
+  //  send the success email
+  sendSuccessfulUpdateEmail(user.name, user.email);
+  res.json({ message: "Password resets successfully." });
 };
