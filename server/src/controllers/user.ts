@@ -100,7 +100,7 @@ export const generateForgetPasswordLink: RequestHandler = async (req, res) => {
     owner: user._id,
     token,
   });
-  const resetLink = `https://yourapp.com/reset-password?token=${token}&userId=${user._id}`;
+  const resetLink = `http://localhost:8989/reset-password.html?token=${token}&userId=${user._id}`;
 
   sendForgetPasswordLink({
     email: user.email,

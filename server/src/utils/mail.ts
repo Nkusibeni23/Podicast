@@ -81,7 +81,7 @@ export const sendForgetPasswordLink = async (options: Options) => {
   //   const token = generateToken();
 
   const message =
-    " We just received a request that you forgot your password.No problem you can use the link below and create brand new password.";
+    "We just received a request that you forgot your password.No problem you can use the link below and create brand new password.";
 
   try {
     transport.sendMail({
@@ -93,7 +93,7 @@ export const sendForgetPasswordLink = async (options: Options) => {
         message,
         logo: "cid:logo",
         banner: "cid:forget_password",
-        link,
+        link: link,
         btnTitle: "Reset Password",
       }),
       attachments: [
@@ -135,7 +135,7 @@ export const sendSuccessfulUpdateEmail = async (
         message,
         logo: "cid:logo",
         banner: "cid:forget_password",
-        link: "https://yourapp.com/sign-in",
+        link: "http://localhost:8989/sign-in.html",
         btnTitle: "Log in",
       }),
       attachments: [
