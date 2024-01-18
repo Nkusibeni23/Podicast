@@ -3,6 +3,7 @@ import {
   generateForgetPasswordLink,
   grantValid,
   sendReVerificationToken,
+  signIn,
   updatePassword,
   verifyEmail,
 } from "#/controllers/user";
@@ -11,6 +12,7 @@ import { validate } from "#/middleware/validate";
 
 import {
   CreateUserSchema,
+  SignInValidationSchema,
   //   EmailVerificationBody,
   TokenAndIdValidation,
   UpdatePasswordSchema,
@@ -36,5 +38,7 @@ router.post(
   isValidPassResetToken,
   updatePassword
 );
+
+router.post("/sign-in", validate(SignInValidationSchema), signIn);
 
 export default router;

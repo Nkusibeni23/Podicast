@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import { isValidObjectId } from "mongoose";
+import EmailVerificationToken from "#/models/emailVerificationToken";
 
 export const CreateUserSchema = yup.object().shape({
   name: yup
@@ -53,4 +54,9 @@ export const UpdatePasswordSchema = yup.object().shape({
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#\$%\^&\*]).{8,}$/,
       "Password must contain the following: a letter, a number and a special character"
     ),
+});
+
+export const SignInValidationSchema = yup.object().shape({
+  email: yup.string().required("Email is missing!").email("Invalid email id"),
+  password: yup.string().trim().required("Password is missing!"),
 });

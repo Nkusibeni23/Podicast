@@ -6,4 +6,5 @@ export const {
   MAILTRAP_USER,
   VERIFICATION_EMAIL,
   PASSWORD_RESET_LINK,
+  JWT_SECRET,
 } = env;
