@@ -2,6 +2,7 @@ import { CreateUser, VerifyEmailRequest } from "#/@types/user";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import User from "#/models/user";
+import bcrypt from "bcrypt";
 import { generateToken } from "#/utils/helper";
 import {
   sendForgetPasswordLink,
@@ -142,31 +143,29 @@ export const updatePassword: RequestHandler = async (req, res) => {
 export const signIn: RequestHandler = async (req, res) => {
   const { password, email } = req.body;
 
-  const user = await User.findOne({
-    email,
-  });
-  if (!user)
+  const user = await User.findOne({ email });
+
+  if (!user) {
     return res.status(403).json({
-      error: "Email/Password mismatch!",
+      error: "User not found!",
     });
+  }
 
   // compare the password
-  const matched = await user.comparePassword(password);
-  if (!matched)
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordMatch) {
     return res.status(403).json({
-      error: "Email/Password mismatch!",
+      error: "Incorrect password!",
     });
+  }
 
   // generate the token for later use
-  const token = jwt.sign(
-    {
-      userId: user._id,
-    },
-    jwtSecret
-  );
-
+  const token = jwt.sign({ userId: user._id }, jwtSecret);
   user.token.push(token);
+
   await user.save();
+
   res.json({
     profile: {
       id: user._id,
