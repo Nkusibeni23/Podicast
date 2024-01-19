@@ -52,4 +52,16 @@ router.get("/is-auth", mustAuth, (req, res) => {
   });
 });
 
+router.get("/public", (req, res) => {
+  res.json({
+    message: "You are in Public route.",
+  });
+});
+
+router.get("/private", mustAuth, (req, res) => {
+  res.json({
+    message: "You are in Private route.",
+  });
+});
+
 export default router;
