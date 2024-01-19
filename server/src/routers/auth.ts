@@ -7,7 +7,7 @@ import {
   updatePassword,
   verifyEmail,
 } from "#/controllers/user";
-import { isValidPassResetToken } from "#/middleware/auth";
+import { isValidPassResetToken, mustAuth } from "#/middleware/auth";
 import { validate } from "#/middleware/validate";
 import User from "#/models/user";
 
@@ -22,7 +22,7 @@ import { JWT_SECRET } from "#/utils/variables";
 import { Router } from "express";
 import { JwtPayload, verify } from "jsonwebtoken";
 
-const jwtSecret = "baiduuuu";
+// const jwtSecret = "baiduuuu";
 
 const router = Router();
 
@@ -46,27 +46,9 @@ router.post(
 
 router.post("/sign-in", validate(SignInValidationSchema), signIn);
 
-router.get("/is-auth", async (req, res) => {
-  const { authorization } = req.headers;
-  const token = authorization?.split("Bearer")[1];
-  if (!token) return res.status(403).json({ error: "Unauthorized request!" });
-
-  const payload = verify(token, jwtSecret) as JwtPayload;
-  const id = payload.UserId;
-
-  const user = await User.findById(id);
-  if (!user) return res.status(403).json({ error: "Unauthorized request!" });
-
+router.get("/is-auth", mustAuth, (req, res) => {
   res.json({
-    profile: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      verified: user.verified,
-      avatar: user.avatar?.url,
-      followers: user.followers.length,
-      followings: user.followings.length,
-    },
+    profile: req.user,
   });
 });
 
