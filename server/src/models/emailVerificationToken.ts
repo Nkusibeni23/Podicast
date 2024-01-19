@@ -1,7 +1,6 @@
 // interface (typescript)
 import { Model, ObjectId, Schema, model } from "mongoose";
 import { hash, compare } from "bcrypt";
-import { create } from "../controllers/user";
 
 interface EmailVerificationTokenDocument {
   owner: ObjectId;
