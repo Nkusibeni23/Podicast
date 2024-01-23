@@ -64,4 +64,21 @@ router.get("/private", mustAuth, (req, res) => {
   });
 });
 
+import formidable from "formidable";
+
+router.post("/update-profile", (req, res) => {
+  if (!req.headers["content-type"]?.startsWith("multipart/form-data;"))
+    return res.status(422).json({ error: "Only accept form-data!" });
+  // handle the file upload
+  const form = formidable();
+  form.parse(req, (err, fields, files) => {
+    console.log("fields:", fields);
+    console.log("files:", files);
+
+    res.json({
+      uploaded: true,
+    });
+  });
+});
+
 export default router;
