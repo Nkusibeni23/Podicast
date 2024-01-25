@@ -3,7 +3,7 @@ import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import User from "#/models/user";
 import bcrypt from "bcrypt";
-import { generateToken } from "#/utils/helper";
+import { formatProfile, generateToken } from "#/utils/helper";
 import {
   sendForgetPasswordLink,
   sendSuccessfulUpdateEmail,
@@ -16,6 +16,7 @@ import crypto from "crypto";
 import { RequestWithFiles } from "#/middleware/fileParser";
 import cloudinary from "#/cloud";
 import formidable from "formidable";
+import { profile } from "console";
 
 const jwtSecret = "baiduuuu";
 
@@ -217,6 +218,11 @@ export const updateProfile: RequestHandler = async (
     user.avatar = { url: secure_url, publicId: public_id };
   }
   await user.save();
-  res.json({ avatar: user.avatar });
-  req.user.id;
+
+  res.json({ profile: formatProfile(user) });
+  // req.user.id;
+};
+
+export const sendProfile: RequestHandler = (req, res) => {
+  res.json({ profile: req.user });
 };

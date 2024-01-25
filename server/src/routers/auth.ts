@@ -2,12 +2,13 @@ import {
   create,
   generateForgetPasswordLink,
   grantValid,
+  sendProfile,
   sendReVerificationToken,
   signIn,
   updatePassword,
   updateProfile,
   verifyEmail,
-} from "#/controllers/user";
+} from "#/controllers/auth";
 import { isValidPassResetToken, mustAuth } from "#/middleware/auth";
 import { validate } from "#/middleware/validate";
 import User from "#/models/user";
@@ -20,7 +21,7 @@ import {
   UpdatePasswordSchema,
 } from "#/utils/validationSchema";
 import { Router } from "express";
-import fileParser, { RequestWithFiles } from "#/middleware/fileParser";
+import fileParser from "#/middleware/fileParser";
 import { JwtPayload, verify } from "jsonwebtoken";
 // const jwtSecret = "baiduuuu";
 
@@ -46,11 +47,7 @@ router.post(
 
 router.post("/sign-in", validate(SignInValidationSchema), signIn);
 
-router.get("/is-auth", mustAuth, (req, res) => {
-  res.json({
-    profile: req.user,
-  });
-});
+router.get("/is-auth", mustAuth, sendProfile);
 
 router.get("/public", (req, res) => {
   res.json({

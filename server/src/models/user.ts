@@ -1,9 +1,9 @@
-// interface (typescript)
-
 import { compare, hash } from "bcrypt";
 import { Model, ObjectId, Schema, model } from "mongoose";
 
-interface UserDocument {
+// interface (typescript)
+export interface UserDocument {
+  _id: ObjectId;
   name: string;
   email: string;
   password: string;
