@@ -226,3 +226,18 @@ export const updateProfile: RequestHandler = async (
 export const sendProfile: RequestHandler = (req, res) => {
   res.json({ profile: req.user });
 };
+
+export const logOut: RequestHandler = async (req, res) => {
+  const { fromAll } = req.query;
+
+  const token = req.token;
+  const user = await User.findById(req.user.id);
+  if (!user) throw new Error("Something went, user not found!");
+
+  // logout from all
+  if (fromAll === "yes") user.tokens = [];
+  else user.tokens = user.tokens.filter((t) => t !== token);
+
+  await user.save();
+  res.json({ success: true });
+};
