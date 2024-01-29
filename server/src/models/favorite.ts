@@ -1,4 +1,3 @@
-import { AudioDocument } from "#/models/audio";
 import { Model, ObjectId, Schema, model, models } from "mongoose";
 
 interface FavoriteDocument {
