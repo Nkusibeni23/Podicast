@@ -8,10 +8,10 @@ interface FavoriteDocument {
 const favoriteSchema = new Schema<FavoriteDocument>(
   {
     owner: {
-      types: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
-    items: [{ types: Schema.Types.ObjectId, ref: "Audio" }],
+    items: [{ type: Schema.Types.ObjectId, ref: "Audio" }],
   },
   { timestamps: true }
 );
