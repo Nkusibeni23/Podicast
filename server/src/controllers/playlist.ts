@@ -1,4 +1,4 @@
-import { CreatePlayListRequest } from "#/@types/audio";
+import { CreatePlayListRequest, updatePlaylistRequest } from "#/@types/audio";
 import Audio from "#/models/audio";
 import Playlist from "#/models/playlist";
 import { RequestHandler } from "express";
@@ -38,3 +38,8 @@ export const createPlaylist: RequestHandler = async (
     },
   });
 };
+
+export const updatePlaylist: RequestHandler = async (
+  req: updatePlaylistRequest,
+  res
+) => {};
