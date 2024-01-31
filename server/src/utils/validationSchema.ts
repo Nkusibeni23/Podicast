@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { isValidObjectId } from "mongoose";
-import EmailVerificationToken from "#/models/emailVerificationToken";
 import { categories } from "./audio_category";
 
 export const CreateUserSchema = yup.object().shape({
@@ -65,9 +64,24 @@ export const SignInValidationSchema = yup.object().shape({
 export const AudioValidationSchema = yup.object().shape({
   title: yup.string().required("Title is missing!"),
   about: yup.string().required("About is missing!"),
-  password: yup
+  category: yup
     .string()
     .trim()
     .oneOf(categories, "Invalid category!")
     .required("Category is missing!"),
+});
+
+// while creating playlist there can be request
+// with new playlist name and the audio that user wants to store inside the playlist
+// or user just wants to create empty playlist.
+
+export const NewPlaylistValidationSchema = yup.object().shape({
+  title: yup.string().required("Title is missing!"),
+  resId: yup.string().transform(function (value) {
+    return this.isType(value) && isValidObjectId(value) ? value : "";
+  }),
+  visibility: yup
+    .string()
+    .oneOf(["public", "private"], "Visibility must be public or private!")
+    .required("Visibility is missing!"),
 });
