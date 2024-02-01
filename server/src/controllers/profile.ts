@@ -127,5 +127,8 @@ export const getPublicUploads: RequestHandler = async (req, res) => {
 };
 
 export const getPublicProfile: RequestHandler = async (req, res) => {
-  const { publicId } = req.params;
+  const { profileId } = req.params;
+  if (isValidObjectId(profileId))
+    return res.status(422).json({ error: "Invalid Profile ID" });
+  await User.findById(profileId);
 };
