@@ -128,7 +128,17 @@ export const getPublicUploads: RequestHandler = async (req, res) => {
 
 export const getPublicProfile: RequestHandler = async (req, res) => {
   const { profileId } = req.params;
-  if (isValidObjectId(profileId))
+  if (!isValidObjectId(profileId))
     return res.status(422).json({ error: "Invalid Profile ID" });
-  await User.findById(profileId);
+  const user = await User.findById(profileId);
+
+  if (!user) return res.status(422).json({ error: "user not found!" });
+  res.json({
+    profile: {
+      id: user._id,
+      name: user.name,
+      followers: user.followers.length,
+      avatar: user.avatar?.url,
+    },
+  });
 };
