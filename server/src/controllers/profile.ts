@@ -125,3 +125,5 @@ export const getPublicUploads: RequestHandler = async (req, res) => {
 
   res.json({ audios });
 };
+
+export const getPublicProfile: RequestHandler = async (req, res) => {};
