@@ -1,5 +1,6 @@
 import { paginationQuery } from "#/@types/misc";
 import Audio, { AudioDocument } from "#/models/audio";
+import Playlist from "#/models/playlist";
 import User from "#/models/user";
 import { error } from "console";
 import { RequestHandler } from "express";
@@ -140,5 +141,16 @@ export const getPublicProfile: RequestHandler = async (req, res) => {
       followers: user.followers.length,
       avatar: user.avatar?.url,
     },
+  });
+};
+
+export const getPublicPlaylist: RequestHandler = async (req, res) => {
+  const { profileId } = req.params;
+  if (!isValidObjectId(profileId))
+    return res.status(422).json({ error: "Invalid Profile ID" });
+
+  await Playlist.find({
+    _id: profileId,
+    visibility: "public",
   });
 };
